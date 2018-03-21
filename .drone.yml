@@ -687,7 +687,7 @@ pipeline:
     when:
       matrix:
         TEST: memcache-redis-cluster
-  acceptance-ui:
+  ui-regression:
     image: juliushaertl/ui-regression:latest 
     commands:
       - cd tests/ui-regression
@@ -697,7 +697,7 @@ pipeline:
     shm_size: '1gb'
     when:
       matrix:
-        TESTS: acceptance-ui
+        TESTS: ui-regression
   publish-s3:
     image: plugins/s3
     bucket: nextcloud-ui-regression
@@ -709,10 +709,9 @@ pipeline:
     secrets: [ aws_access_key_id, aws_secret_access_key ]
     when:
       matrix:
-        TESTS: acceptance-ui
+        TESTS: ui-regression
 matrix:
   include:
-    - TESTS: acceptance-ui
     - TESTS: checkers
     - TESTS: vue-build-settings
     - TESTS: vue-build-updatenotification
@@ -854,6 +853,7 @@ matrix:
       ENABLE_REDIS_CLUSTER: true
     - TESTS: sqlite-php7.0-webdav-apache
       ENABLE_REDIS: true
+    - TESTS: ui-regression
 
 services:
   cache:
@@ -861,7 +861,7 @@ services:
     when:
       matrix:
        ENABLE_REDIS: true
-  acceptance-ui-php:
+  ui-regression-php:
     image: nextcloudci/server:server-1
     commands:
       - . /etc/apache2/envvars
@@ -870,8 +870,8 @@ services:
       - apache2 -DFOREGROUND
     when:
       matrix:
-        TESTS: acceptance-ui
-  acceptance-ui-php-master:
+        TESTS: ui-regression
+  ui-regression-php-master:
     image: nextcloudci/server:server-1
     commands:
       - . /etc/apache2/envvars
@@ -880,7 +880,7 @@ services:
       - apache2 -DFOREGROUND 
     when:
       matrix:
-        TESTS: acceptance-ui
+        TESTS: ui-regression
   cache-cluster:
     image: morrisjobke/redis-cluster
     when:
