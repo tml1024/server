@@ -55,7 +55,7 @@ class Provider extends \OCP\Search\Provider {
 		$numComments = 50;
 		$offset = 0;
 
-		while ($result < $numComments) {
+		while (\count($result) < $numComments) {
 			/** @var IComment[] $comments */
 			$comments = $cm->search($query, 'files', '', 'comment', $offset, $numComments);
 
@@ -65,7 +65,7 @@ class Provider extends \OCP\Search\Provider {
 					continue;
 				}
 
-				$displayName = $cm->resolveDisplayName($comment->getActorType(), $comment->getActorId());
+				$displayName = $cm->resolveDisplayName('user', $comment->getActorId());
 
 				try {
 					$file = $this->getFileForComment($uf, $comment);
