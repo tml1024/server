@@ -63,18 +63,8 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	/**
 	 * @return Locator
 	 */
-	public static function detailsViewForSection($section) {
-		return Locator::forThe()->xpath("/preceding-sibling::*[position() = 1 and @id = 'app-sidebar']")->
-				descendantOf(self::mainViewForSection($section))->
-				describedAs("Details view for section $section in Files app");
-	}
-
-	/**
-	 * @return Locator
-	 */
-	public static function currentSectionDetailsView() {
-		return Locator::forThe()->xpath("/preceding-sibling::*[position() = 1 and @id = 'app-sidebar']")->
-				descendantOf(self::currentSectionMainView())->
+	public static function currentDetailsView() {
+		return Locator::forThe()->id("app-sidebar")->
 				describedAs("Current section details view in Files app");
 	}
 
@@ -83,7 +73,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	public static function closeDetailsViewButton() {
 		return Locator::forThe()->css(".icon-close")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Close current section details view in Files app");
 	}
 
@@ -92,7 +82,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	public static function fileNameInCurrentSectionDetailsView() {
 		return Locator::forThe()->css(".fileName")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("File name in current section details view in Files app");
 	}
 
@@ -110,7 +100,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	private static function fileDetailsInCurrentSectionDetailsView() {
 		return Locator::forThe()->css(".file-details")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("File details in current section details view in Files app");
 	}
 
@@ -119,7 +109,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	public static function inputFieldForTagsInCurrentSectionDetailsView() {
 		return Locator::forThe()->css(".systemTagsInfoView")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Input field for tags in current section details view in Files app");
 	}
 
@@ -172,7 +162,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	private static function tabHeadersInCurrentSectionDetailsView() {
 		return Locator::forThe()->css(".tabHeaders")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Tab headers in current section details view in Files app");
 	}
 
@@ -181,7 +171,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	public static function tabInCurrentSectionDetailsViewNamed($tabName) {
 		return Locator::forThe()->xpath("//div[@id=//*[contains(concat(' ', normalize-space(@class), ' '), ' tabHeader ') and normalize-space() = '$tabName']/@data-tabid]")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Tab named $tabName in current section details view in Files app");
 	}
 
@@ -202,7 +192,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 		// return the checkbox itself, but the element that the user interacts
 		// with is the label.
 		return Locator::forThe()->xpath("//label[normalize-space() = 'Share link']")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Share link checkbox in the details view in Files app");
 	}
 
@@ -210,7 +200,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function shareLinkField() {
-		return Locator::forThe()->css(".linkText")->descendantOf(self::currentSectionDetailsView())->
+		return Locator::forThe()->css(".linkText")->descendantOf(self::currentDetailsView())->
 				describedAs("Share link field in the details view in Files app");
 	}
 
@@ -222,7 +212,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 		// that would return the radio button itself, but the element that the
 		// user interacts with is the label.
 		return Locator::forThe()->xpath("//label[normalize-space() = 'Allow upload and editing']")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Allow upload and editing radio button in the details view in Files app");
 	}
 
@@ -234,7 +224,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 		// would return the checkbox itself, but the element that the user
 		// interacts with is the label.
 		return Locator::forThe()->xpath("//label[normalize-space() = 'Password protect']")->
-				descendantOf(self::currentSectionDetailsView())->
+				descendantOf(self::currentDetailsView())->
 				describedAs("Password protect checkbox in the details view in Files app");
 	}
 
@@ -242,7 +232,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function passwordProtectField() {
-		return Locator::forThe()->css(".linkPassText")->descendantOf(self::currentSectionDetailsView())->
+		return Locator::forThe()->css(".linkPassText")->descendantOf(self::currentDetailsView())->
 				describedAs("Password protect field in the details view in Files app");
 	}
 
@@ -250,7 +240,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function passwordProtectWorkingIcon() {
-		return Locator::forThe()->css(".linkPass .icon-loading-small")->descendantOf(self::currentSectionDetailsView())->
+		return Locator::forThe()->css(".linkPass .icon-loading-small")->descendantOf(self::currentDetailsView())->
 				describedAs("Password protect working icon in the details view in Files app");
 	}
 
@@ -347,36 +337,20 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	}
 
 	/**
-	 * @Then I see that the details view for :section section is open
+	 * @Then I see that the details view is open
 	 */
-	public function iSeeThatTheDetailsViewForSectionIsOpen($section) {
+	public function iSeeThatTheDetailsViewIsOpen() {
 		PHPUnit_Framework_Assert::assertTrue(
-				$this->actor->find(self::detailsViewForSection($section), 10)->isVisible());
-
-		$otherSections = self::sections();
-		unset($otherSections[$section]);
-
-		$this->assertDetailsViewForSectionsAreClosed($otherSections);
+			$this->actor->find(self::currentDetailsView(), 10)->isVisible());
 	}
 
 	/**
 	 * @Then I see that the details view is closed
 	 */
 	public function iSeeThatTheDetailsViewIsClosed() {
-		PHPUnit_Framework_Assert::assertNotNull($this->actor->find(self::currentSectionMainView(), 10));
+		PHPUnit_Framework_Assert::assertFalse(
+			$this->actor->find(self::currentDetailsView(), 10)->isVisible());
 
-		$this->assertDetailsViewForSectionsAreClosed(self::sections());
-	}
-
-	private function assertDetailsViewForSectionsAreClosed($sections) {
-		foreach ($sections as $section => $id) {
-			try {
-				PHPUnit_Framework_Assert::assertFalse(
-						$this->actor->find(self::detailsViewForSection($section))->isVisible(),
-						"Details view for section $section is open but it should be closed");
-			} catch (NoSuchElementException $exception) {
-			}
-		}
 	}
 
 	/**
